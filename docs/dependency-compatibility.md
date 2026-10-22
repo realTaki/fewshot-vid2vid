@@ -1,8 +1,10 @@
 # Requests and tqdm compatibility patch
 
-This change deliberately keeps the documented Python 3.8.10 / PyTorch 1.9.1 /
-CUDA 11.1 installation. It does not upgrade the ML stack or claim to make the
-whole historical environment secure or reproducible.
+This change retains the README's tested host environment (Python 3.8.10 and
+CUDA 11.4) and the separate container/install recipe (CUDA 11.1.1,
+PyTorch 1.9.1+cu111, torchvision 0.10.1+cu111, and torchaudio 0.9.1). It does not
+change either configuration, upgrade the ML stack, or claim to make the whole
+historical environment secure or reproducible.
 
 ## Selected pins
 
