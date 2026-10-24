@@ -57,9 +57,9 @@ class DependencyCompatibilityTests(unittest.TestCase):
 
     def test_expected_pins(self):
         requirements = (ROOT / 'requirements.txt').read_text().splitlines()
-        self.assertIn('requests==2.32.4', requirements)
+        self.assertIn('requests==2.33.0', requirements)
         self.assertIn('tqdm==4.66.3', requirements)
-        self.assertEqual(requests.__version__, '2.32.4')
+        self.assertEqual(requests.__version__, '2.33.0')
 
     def test_application_streaming_and_confirmation(self):
         # Compile only these real pure helpers; do not import the torch module.

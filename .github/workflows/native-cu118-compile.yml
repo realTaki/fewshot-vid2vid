@@ -1,0 +1,60 @@
+name: Native CUDA11.8 compile only (no GPU)
+on:
+  push:
+    branches: [maintenance/python311-alert-migration-20261024]
+    paths:
+      - .github/workflows/native-cu118-compile.yml
+      - requirements-native-cu118.lock
+      - scripts/ci_native_cuda118.py
+      - scripts/cuda118-native-sdk.json
+      - scripts/check_native_imports.py
+      - src/imaginaire/third_party/**
+      - src/imaginaire/model_utils/gancraft/voxlib/**
+permissions:
+  contents: read
+jobs:
+  compile:
+    if: github.repository == 'realTaki/fewshot-vid2vid' && github.event.repository.private == false
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    env:
+      CC: gcc-11
+      CXX: g++-11
+      CUDA_VERSION: '11.8'
+      TORCH_CUDA_ARCH_LIST: '7.0'
+      MAX_JOBS: '1'
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.11.17'
+      - name: Verify scope/compiler and sequential hash-required dependency setup
+        run: |
+          set -euo pipefail
+          gcc-11 --version
+          g++-11 --version
+          python scripts/ci_native_cuda118.py --check-plan
+          python scripts/ci_native_cuda118.py
+      - name: Compile and link all six modules at sm70 without GPU execution
+        run: |
+          set -euo pipefail
+          "$NATIVE_PYTHON" - <<'PY'
+          import sys, torch
+          assert sys.version_info[:3] == (3,11,17)
+          assert torch.__version__ == '2.7.1+cu118'
+          assert torch.version.cuda == '11.8'
+          assert not torch.cuda.is_available(), 'CPU-host job only'
+          print(sys.version, torch.__version__, torch.version.cuda, torch._C._GLIBCXX_USE_CXX11_ABI)
+          PY
+          for module in correlation channelnorm resample2d bias_act upfirdn2d; do
+            (cd "src/imaginaire/third_party/$module" && "$NATIVE_PYTHON" setup.py build_ext --inplace)
+          done
+          (cd src/imaginaire/model_utils/gancraft/voxlib && "$NATIVE_PYTHON" setup.py build_ext --inplace)
+          "$NATIVE_PYTHON" scripts/check_native_imports.py
+          "$NATIVE_PYTHON" -m pip check
+          printf '## CUDA11.8/GCC11 sm70 compile/link/import only\n\nNo GPU operators, training, models, deployment or full Docker validation.\n' >> "$GITHUB_STEP_SUMMARY"
+          find src/imaginaire/third_party src/imaginaire/model_utils/gancraft/voxlib -name '*.so' -type f -exec sha256sum {} \; | tee -a "$GITHUB_STEP_SUMMARY"

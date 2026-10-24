@@ -210,7 +210,7 @@ def plot_keypoints(image, keypoints, normalize=True):
 
     cv2_image = np.ascontiguousarray(image[:, :, ::-1])  # RGB to BGR.
     for idx in range(keypoints.shape[0]):
-        keypoint = np.round(keypoints[idx]).astype(np.int)
+        keypoint = np.round(keypoints[idx]).astype(np.int64)
         cv2_image = cv2.circle(cv2_image, tuple(keypoint),
                                5, (0, 255, 0), -1)
     image = np.ascontiguousarray(cv2_image[:, :, ::-1])
@@ -305,7 +305,7 @@ def plot_keypoints_on_black(resize_h, resize_w, crop_h, crop_w, is_flipped,
     for t_idx in range(keypoints.shape[0]):
         cv2_image = np.zeros((crop_h, crop_w, 3)).astype(np.uint8)
         for idx in range(keypoints[t_idx].shape[0]):
-            keypoint = np.round(keypoints[t_idx][idx]).astype(np.int)
+            keypoint = np.round(keypoints[t_idx][idx]).astype(np.int64)
             cv2_image = cv2.circle(cv2_image, tuple(keypoint),
                                    5, (0, 255, 0), -1)
         image = np.ascontiguousarray(cv2_image[:, :, ::-1])  # BGR to RGB.

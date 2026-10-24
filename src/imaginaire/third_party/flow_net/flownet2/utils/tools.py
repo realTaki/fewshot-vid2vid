@@ -35,11 +35,11 @@ class TimerBlock:
         print(("{}".format(title)))
 
     def __enter__(self):
-        self.start = time.clock()
+        self.start = time.perf_counter()
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        self.end = time.clock()
+        self.end = time.perf_counter()
         self.interval = self.end - self.start
 
         if exc_type is not None:
@@ -48,7 +48,7 @@ class TimerBlock:
             self.log("Operation finished\n")
 
     def log(self, string):
-        duration = time.clock() - self.start
+        duration = time.perf_counter() - self.start
         units = 's'
         if duration > 60:
             duration = duration / 60.
@@ -81,7 +81,7 @@ def add_arguments_for_module(
     args, unknown_args = parser.parse_known_args()
     class_obj = module_dict[vars(args)[argument_for_class]]
 
-    argspec = inspect.getargspec(class_obj.__init__)
+    argspec = inspect.getfullargspec(class_obj.__init__)
 
     defaults = argspec.defaults[::-1] if argspec.defaults else None
 

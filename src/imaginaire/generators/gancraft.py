@@ -479,7 +479,7 @@ class Generator(Base3DGenerator):
             fip_normal = lut[fip_wall_orientation]  # [1, 542, 542, 1, 3]
             diffuse_shade = torch.abs(torch.sum(fip_normal * raydirs, dim=-1))
 
-            mc_rgb = (mc_rgb.astype(np.float) / 255) ** 2.2
+            mc_rgb = (mc_rgb.astype(np.float64) / 255) ** 2.2
             mc_rgb = mc_rgb * diffuse_shade[0, :, :, :].cpu().numpy()
             mc_rgb = (mc_rgb ** (1/2.2)) * 255
             mc_rgb = mc_rgb.astype(np.uint8)
