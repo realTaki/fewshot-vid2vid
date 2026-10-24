@@ -63,7 +63,8 @@ receipt.** Scanner lag is not silently substituted for such a receipt.
 - Five extension setups and voxlib use C++17. Correlation/channelnorm dispatch
   uses `scalar_type()`, the three FlowNet kernels use `data_ptr<T>()`, and
   voxlib uses the current `C10_CUDA_CHECK` declaration. These are source
-  adaptations awaiting six real CUDA builds, not proof those builds pass.
+  adaptations now covered by the finite six-module CI compile/link/import
+  result below, not by GPU operator execution or a full container build.
 - NumPy aliases become explicit `int64`, `float64` and `bool_`; FlowNet uses
   `imageio.v2.imread`, `inspect.getfullargspec` and `time.perf_counter`.
 - All seven source checkpoint loaders explicitly use `weights_only=True`.
@@ -151,12 +152,46 @@ ambiguous extra-index routing; explicit `--torch-backend cpu` succeeded.
 Albumentations still emits its existing ReplayMode warning for target-dependent
 random crop; the synthetic crop passes, but broader replay parity is unproven.
 
+## Finite native CI result — compile/link/import only
+
+[GitHub Actions run 40138694176](https://github.com/realTaki/fewshot-vid2vid/actions/runs/40138694176)
+completed **success** at 2026-10-24 22:35:47 UTC for exact source commit
+`f1b9bc36ded7ef13775361b4ef59a8fb8f0402a1`. Its single free public standard
+`ubuntu-22.04` CPU-host job took **7m28s** (22:28:18–22:35:46 UTC).
+The successful strict `set -euo pipefail` compile step and immutable workflow
+establish compilation, linking and import of all six modules:
+`correlation_cuda`, `channelnorm_cuda`, `resample2d_cuda`, `bias_act_cuda`,
+`upfirdn2d_cuda` and `voxlib`. The workflow selects CUDA 11.8 / GCC 11 / sm70,
+asserts CPython 3.11.17 and torch 2.7.1+cu118, requires no available GPU,
+and runs the actual native import checks plus `pip check`.
+
+The preceding setup step also succeeded: 13 exact CUDA SDK debs and the
+24-wheel native subset were downloaded sequentially, hash verified,
+extracted/installed and removed under the 12GiB initial / 2GiB pre-compile
+free-disk gates. This is **not** installation of the full 192-package
+application lock. The runner uses `contents: read`, one compile worker and a
+30-minute job timeout, with no paid/larger/GPU runner, cache, artifact upload,
+secrets, OIDC, model download, deployment or host-driver change.
+
+Verification is metadata-only: completed run/job/step conclusions were checked
+against that exact workflow source. Full job-log download/read was denied by
+auto-review under the user's dense-log rule and was not retried by another
+route. Raw compiler output, exact compiler minor version, printed ABI value
+and `.so` hashes were **not obtained**; no such claim is made. The successful
+step does not execute CUDA operators, validate V100/driver behavior, build the
+full Docker/PSF source image, check historical checkpoints, or run training or
+inference. Later documentation-only commits inherit this source-bound result;
+they are not claimed as newly CI-tested commits and do not trigger this
+path-filtered workflow.
+
 ## Required next gates — no automatic merge or deployment
 
 1. In an **existing authorized** CUDA11.8/GCC11 environment, build the candidate
    Docker image and its source distributions; verify complete `pip check`,
-   real runtime imports and all six native extension imports. Docker/nvcc/GPU
-   were absent from this worker, so this gate is unrun, not failed or passed.
+   real full-application runtime imports. The six native compile/link/import
+   subset now passes the separate CPU-host CI above; the full Docker/PSF
+   source build and complete application install remain unrun. Docker/nvcc/GPU
+   were absent from the original local worker.
 2. Execute small CUDA operator forward/backward/reference parity fixtures for
    all six modules, including V100/sm70 if that host remains the target. Check
    the actual driver/toolkit/ABI rather than the historical README numbers.

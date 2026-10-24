@@ -1,5 +1,5 @@
 {
-  "recorded_utc": "2026-10-24T21:56:44.964601+00:00",
+  "recorded_utc": "2026-10-24T22:49:20Z",
   "status": "draft isolatedmigration; NOready/merge/deploy authorization",
   "base_after_approved_merges": "cddcda13f2fb3770a3eb96df1a71dd30ced83416",
   "actual_alert_scope": {
@@ -65,10 +65,10 @@
     "torchaudio": "2.7.1+cu118",
     "CUDA": "11.8.0",
     "OS": "Ubuntu22.04",
-    "compiler": "GCC11 configured; notexecutedhere",
+    "compiler": "GCC11 selected by successful finite native CI; exact minor version not obtained",
     "metadata_hashlock_packages": 192,
-    "lock_dryrun_resolution": "passed; wouldinstall157packages, noCUDApackagesdownloaded/installed",
-    "six_native_extension_builds": "NOTRUN: noDocker/nvcc/GPU inworker",
+    "lock_dryrun_resolution": "passed; would install 157 packages; complete 192-package application closure not downloaded/installed; separate 24-wheel native subset installed in CI",
+    "six_native_extension_builds": "PASS: source f1b9bc36, run40138694176 compile/link/import on CPU host; no GPU operator execution",
     "checkpoint_provenance_and_historical_format": "NOTVERIFIED, noexistingcheckpointdownloaded",
     "training_inference_GPU_parity": "NOTRUN",
     "host_driver_change": false,
@@ -90,5 +90,46 @@
       "sha256": "9eeca2758cbe4ed69bd024a56fdfc667f26abc490795eda952a88292d2b420ac",
       "bytes": 96388
     }
+  },
+  "native_CI": {
+    "run_id": 40138694176,
+    "url": "https://github.com/realTaki/fewshot-vid2vid/actions/runs/40138694176",
+    "source_commit": "f1b9bc36ded7ef13775361b4ef59a8fb8f0402a1",
+    "status": "completed",
+    "conclusion": "success",
+    "completed_utc": "2026-10-24T22:35:47Z",
+    "job_id": 121005614204,
+    "job_duration_seconds": 448,
+    "runner": "free public standard ubuntu-22.04 CPU host",
+    "compiler_scope": "CUDA11.8 / GCC11 / sm70; exact compiler minor and ABI output not obtained",
+    "modules": [
+      "correlation_cuda",
+      "channelnorm_cuda",
+      "resample2d_cuda",
+      "bias_act_cuda",
+      "upfirdn2d_cuda",
+      "voxlib"
+    ],
+    "compile_link_import_and_pip_check": "passed: strict sequential immutable workflow and successful step metadata",
+    "setup": "passed: 13 exact SDK debs and 24 native wheels; sequential hash verification/install/delete; 12GiB/2GiB disk gates",
+    "permission": "contents:read",
+    "artifact_count": 0,
+    "raw_log_boundary": "Full job-log download/read auto-review denied under user dense-log rule; not retried by another route. No raw compiler logs, compiler minor version, ABI value or .so hashes obtained.",
+    "not_validated": [
+      "GPU operator forward/backward/reference parity",
+      "V100/driver",
+      "full Docker/PSF source build",
+      "complete 192-package application install",
+      "historical checkpoints",
+      "training/inference"
+    ],
+    "not_changed": [
+      "default branch",
+      "PR draft state",
+      "merge/deployment authorization",
+      "host driver",
+      "permissions/credentials"
+    ],
+    "docs_only_followup": "Source-bound result; docs-only changes do not trigger native path-filtered workflow; not new CI-tested SHA"
   }
 }
