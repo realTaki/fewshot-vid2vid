@@ -191,6 +191,8 @@ class Python311Migration(unittest.TestCase):
             setup = (ROOT / "src/imaginaire/third_party" / name / "setup.py").read_text()
             self.assertIn("-std=c++17", setup)
             self.assertNotIn("-std=c++14", setup)
+            self.assertNotIn("arch=compute", setup)
+            self.assertIn("TORCH_CUDA_ARCH_LIST", setup)
         for name in ("correlation", "channelnorm", "resample2d"):
             for path in (ROOT / "src/imaginaire/third_party" / name / "src").glob("*.cu"):
                 self.assertNotIn(".type()", path.read_text())
