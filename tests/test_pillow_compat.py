@@ -30,7 +30,7 @@ def repo_function(relative, name):
 
 
 def image_eval(expression, **environment):
-    # Pillow 13 removed eval; unsafe_eval retains the bounded expression API.
+    # Test-only fixed trusted expressions; never accept external expression strings.
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", DeprecationWarning)
         return ImageMath.unsafe_eval(expression, **environment)

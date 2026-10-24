@@ -141,8 +141,10 @@ source-build Docker image) and the official **CPU** torch tuple:
 Failures were retained, not relabeled as passes: the first unchanged tests
 failed the old Requests pin and removed `ImageMath.eval`; the initial adaptation
 also used the old positional environment signature and omitted the isolated
-trainer decorator. Final tests use the correct keyword-only `unsafe_eval` API
-and explicit harness boundary. An all-wheel-only resolve failed on the legacy
+trainer decorator. Final tests use the correct keyword-only `unsafe_eval` API only with fixed,
+trusted literal expressions; it must never accept external expression strings
+and is not a safe evaluator for untrusted input. The trainer harness boundary
+is explicit. An all-wheel-only resolve failed on the legacy
 source-only NVIDIA provider; a metadata-capable solve and single-provider
 closure repaired that issue. The first CPU lock sync correctly failed on
 ambiguous extra-index routing; explicit `--torch-backend cpu` succeeded.
