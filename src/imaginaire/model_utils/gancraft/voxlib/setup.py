@@ -5,8 +5,8 @@
 from setuptools import setup
 from torch.utils.cpp_extension import BuildExtension, CUDAExtension
 
-cxx_args = ['-fopenmp']
-nvcc_args = []
+cxx_args = ['-fopenmp', '-std=c++17']
+nvcc_args = ['-std=c++17']
 
 setup(
     name='voxrender',

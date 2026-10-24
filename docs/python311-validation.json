@@ -1,0 +1,94 @@
+{
+  "recorded_utc": "2026-10-24T21:56:44.964601+00:00",
+  "status": "draft isolatedmigration; NOready/merge/deploy authorization",
+  "base_after_approved_merges": "cddcda13f2fb3770a3eb96df1a71dd30ced83416",
+  "actual_alert_scope": {
+    "premerge39": true,
+    "mergeddefault16_snapshot_ranges_avoided": true,
+    "additional_migration23_snapshot_ranges_avoided": true,
+    "not_alert_closure_receipts": true
+  },
+  "CPU": {
+    "python": "3.11.17 uv-managed Astral standalone",
+    "torch": "2.7.1+cpu",
+    "torchvision": "0.22.1+cpu",
+    "torchaudio": "2.7.1+cpu",
+    "Pillow": "13.0.0",
+    "Requests": "2.33.0",
+    "numpy": "1.26.4",
+    "scipy": "1.15.3",
+    "hash_synced_locked_packages": 46,
+    "pip_check_passed": true,
+    "tracked_tests": 31,
+    "tracked_test_result": "passed",
+    "extra_HTTP_matrix": [
+      {
+        "urllib3": "1.26.20",
+        "tests": 7,
+        "passed": 7
+      },
+      {
+        "urllib3": "2.2.3",
+        "tests": 7,
+        "passed": 7
+      }
+    ],
+    "exact_CPU_lock_restored_and31_tests_rerun": true,
+    "real_imports_and_CPU_ops": [
+      "torch",
+      "torchvision",
+      "torchaudio",
+      "imaginaire.utils.io",
+      "imaginaire.utils.visualization.common",
+      "imaginaire.utils.data",
+      "FlowNet tools/frame_utils",
+      "torchvision.ops.nms",
+      "torchaudio.functional.resample"
+    ],
+    "trainer_scope": "AST-isolated actualsave/loadmethodbodies, identitymaster_onlydecorator, realtinyLinear/Adam/StepLR; NOTwholetrainerstartup",
+    "no_sockets_DNS_model_downloads_in_tests": true
+  },
+  "host_native": {
+    "actual_channelnorm_resample_host_wrapper_syntax": "passed C++17 GCC14.2 CPUtorch2.7.1 headers",
+    "linked_CPU_dispatch_data_ptr_probe": "passed",
+    "not_CUDA_compilation": true
+  },
+  "static": {
+    "python311_AST_files": 168,
+    "shell_syntax": "passed",
+    "git_diff_whitespace": "passed"
+  },
+  "CUDA_candidate": {
+    "python": "3.11.17 PSFsourceconfigured; unbuilt",
+    "torch": "2.7.1+cu118",
+    "torchvision": "0.22.1+cu118",
+    "torchaudio": "2.7.1+cu118",
+    "CUDA": "11.8.0",
+    "OS": "Ubuntu22.04",
+    "compiler": "GCC11 configured; notexecutedhere",
+    "metadata_hashlock_packages": 192,
+    "lock_dryrun_resolution": "passed; wouldinstall157packages, noCUDApackagesdownloaded/installed",
+    "six_native_extension_builds": "NOTRUN: noDocker/nvcc/GPU inworker",
+    "checkpoint_provenance_and_historical_format": "NOTVERIFIED, noexistingcheckpointdownloaded",
+    "training_inference_GPU_parity": "NOTRUN",
+    "host_driver_change": false,
+    "paid_GPU_or_cloud_task_or_new_login": false
+  },
+  "repair_history_preserved": [
+    "unchangedtestsonnewdeps: oldRequestspinguardfailure and2ImageMath.evalAttributeErrors",
+    "firstadaptation:2unsafe_evalpositionalTypeErrors andmaster_onlyharnessNameError; finalrepaired",
+    "allwheelonlyresolve rejectedlegacy source-onlynvidia-ml-py3; finalsingleproviderroot/192package metadataresolve",
+    "firstCPUlocksync extraindexfilelockrouting failure; explicitbackendrouting fixed; nounsafeindexstrategy",
+    "Albumentations existingtarget-dependent ReplayModewarning retained; nofullreplayparityclaim"
+  ],
+  "locks": {
+    "requirements-python311-cu118.lock": {
+      "sha256": "3a3c610e99dc602caa96f51be6342d53182b7aea055cb6434ac68d2def1271d1",
+      "bytes": 197034
+    },
+    "requirements-cpu-test.lock": {
+      "sha256": "9eeca2758cbe4ed69bd024a56fdfc667f26abc490795eda952a88292d2b420ac",
+      "bytes": 96388
+    }
+  }
+}

@@ -4,7 +4,7 @@
 # To view a copy of this license, check out LICENSE.md
 import numpy as np
 from os.path import splitext
-from scipy.misc import imread
+from imageio.v2 import imread
 from . import flow_utils
 
 

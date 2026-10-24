@@ -6,6 +6,7 @@
 #include <torch/types.h>
 
 #include <ATen/ATen.h>
+#include <c10/cuda/CUDAException.h>
 #include <ATen/AccumulateType.h>
 #include <ATen/cuda/CUDAContext.h>
 #include <ATen/cuda/CUDAApplyUtils.cuh>
@@ -192,7 +193,7 @@ torch::Tensor positional_encoding_cuda(const torch::Tensor& in_feature, int ndeg
         in_feature.data_ptr<float>(), p
     );
 
-    THCudaCheck(cudaGetLastError());
+    C10_CUDA_CHECK(cudaGetLastError());
     return out_feature;
 }
 
@@ -279,7 +280,7 @@ torch::Tensor positional_encoding_backward_cuda(const torch::Tensor& out_feature
         out_feature_grad.data_ptr<float>(), out_feature.data_ptr<float>(), p
     );
 
-    THCudaCheck(cudaGetLastError());
+    C10_CUDA_CHECK(cudaGetLastError());
 
     return in_feature_grad;
 }
