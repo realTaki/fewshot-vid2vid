@@ -4,7 +4,7 @@ import cv2
 import argparse
 import os
 import glob
-from utils.image_utility import save_image, generate_random_color, draw_border
+from pathlib import Path
 from imutils import face_utils
 import json
 
@@ -38,7 +38,7 @@ def dl_landmarks(image, gray, h, w, image_name_without_ext, output_dir):
         shape = face_utils.shape_to_np(shape)
         shape = shape.tolist()
 
-        with open(os.path.join(output_dir, img_name_without_ext + ".json"), "w") as f:
+        with open(os.path.join(output_dir, image_name_without_ext + ".json"), "w") as f:
             json.dump(shape, f)
 
         break
@@ -86,7 +86,7 @@ if __name__ == "__main__":
         if os.path.isfile(args.input_dir):
             img_name = args.input_dir
             image = cv2.imread(img_name)
-            img_name_without_ext = img_name.split("/")[-1].split(".")[0]
+            img_name_without_ext = Path(img_name).stem
 
             if image is None:
                 print("Please provide image ...")
@@ -97,7 +97,7 @@ if __name__ == "__main__":
         elif os.path.isdir(args.input_dir):
             for img_name in sorted(glob.glob(os.path.join(args.input_dir, "*.jpg"))):
                 image = cv2.imread(img_name)
-                img_name_without_ext = img_name.split("/")[-1].split(".")[0]
+                img_name_without_ext = Path(img_name).stem
 
                 if image is None:
                     print("Please provide image ...")
