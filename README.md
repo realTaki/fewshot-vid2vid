@@ -103,7 +103,7 @@ python download_test_data.py --model_name fs_vid2vid
 將欲使用的影片放入 `projects/fs_vid2vid/data/driving/videos`
 1. 執行
 ```
-python video_to_frames.py -i projects/fs_vid2vid/data/driving/video/00000.mp4 -o projects/fs_vid2vid/data/driving/images/00000
+python video_to_frames.py -i projects/fs_vid2vid/data/driving/videos/00000.mp4 -o projects/fs_vid2vid/data/driving/images/00000
 ```
 2. 執行
 ```
