@@ -1,4 +1,4 @@
-"""Bounded offline dependency regressions; no CUDA, checkpoints, or HTTP.
+"""Bounded offline dependency regressions; no CUDA, real checkpoints, or network.
 
 Run with ``python -m unittest discover -s tests -v`` after installing the two
 requirements and Requests' dependencies.  This is not an inference test.
@@ -89,6 +89,43 @@ class DependencyCompatibilityTests(unittest.TestCase):
                 self.assertTrue(all(kwargs['verify'] for _, kwargs in adapter.calls))
                 if confirmation:
                     self.assertIn('confirm=fixture-token', adapter.calls[-1][0])
+
+    def test_checkpoint_download_and_cache_without_network(self):
+        # Exercise the real checkpoint path, including the Requests session.
+        # Only model/torch setup and the in-memory transport are substituted.
+        tree = ast.parse((ROOT / 'src/imaginaire/utils/io.py').read_text())
+        names = {'get_checkpoint', 'download_file', 'get_confirm_token',
+                 'save_response_content'}
+        selected = [node for node in tree.body if isinstance(node, ast.FunctionDef)
+                    and node.name in names]
+        self.assertEqual({node.name for node in selected}, names)
+        dist = mock.Mock()
+        dist.is_available.return_value = False
+        namespace = {'os': os, 'requests': requests, 'dist': dist,
+                     'is_master': lambda: True, 'print': mock.Mock()}
+        exec(compile(ast.Module(body=selected, type_ignores=[]),
+                     'src/imaginaire/utils/io.py', 'exec'), namespace)
+
+        adapter = SyntheticAdapter(confirmation=True)
+        session = requests.Session()
+        session.trust_env = False
+        session.mount('https://', adapter)
+        self.addCleanup(session.close)
+        with tempfile.TemporaryDirectory() as directory, \
+                mock.patch.dict(os.environ, {'TORCH_HOME': directory}), \
+                mock.patch.object(requests, 'Session', return_value=session) as new_session:
+            path = namespace['get_checkpoint']('nested/fixture.pt', 'fixture-id')
+            self.assertEqual(Path(path), Path(directory) / 'checkpoints/nested/fixture.pt')
+            self.assertEqual(Path(path).read_bytes(), b'synthetic-payload')
+            self.assertEqual(namespace['get_checkpoint']('nested/fixture.pt', 'fixture-id'), path)
+            new_session.assert_called_once_with()
+
+        self.assertEqual(len(adapter.calls), 2)
+        self.assertEqual(adapter.calls[0][0],
+                         'https://docs.google.com/uc?export=download&id=fixture-id')
+        self.assertIn('confirm=fixture-token', adapter.calls[1][0])
+        self.assertTrue(all(kwargs['stream'] and kwargs['verify'] for _, kwargs in adapter.calls))
+        dist.barrier.assert_not_called()
 
     def test_netrc_lookup_uses_hostname_not_userinfo(self):
         fake = mock.Mock()
