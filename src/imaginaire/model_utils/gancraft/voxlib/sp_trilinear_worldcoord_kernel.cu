@@ -10,6 +10,7 @@
 #include <torch/types.h>
 
 #include <ATen/ATen.h>
+#include <c10/cuda/CUDAException.h>
 #include <ATen/AccumulateType.h>
 #include <ATen/cuda/CUDAContext.h>
 #include <ATen/cuda/CUDAApplyUtils.cuh>
@@ -434,7 +435,7 @@ torch::Tensor sp_trilinear_worldcoord_cuda(const torch::Tensor& in_feature, cons
         out_feature.data_ptr<float>(),
         in_feature.data_ptr<float>(), in_corner_lut.data_ptr<int32_t>(), in_worldcoord.data_ptr<float>(), p
     );
-    THCudaCheck(cudaGetLastError());
+    C10_CUDA_CHECK(cudaGetLastError());
     return out_feature;
 }
 
@@ -522,6 +523,6 @@ std::vector<torch::Tensor> sp_trilinear_worldcoord_backward_cuda(const torch::Te
         );
     }
 
-    THCudaCheck(cudaGetLastError());
+    C10_CUDA_CHECK(cudaGetLastError());
     return {in_feature_grad};
 }

@@ -33,7 +33,7 @@ def gen_corner_voxel(voxel):
     Args:
         voxel (torch.IntTensor, CPU): Input voxel of three dimensions
     """
-    structure = np.zeros([3, 3, 3], dtype=np.bool)
+    structure = np.zeros([3, 3, 3], dtype=np.bool_)
     structure[1:, 1:, 1:] = True
     voxel_p = F.pad(voxel, (0, 1, 0, 1, 0, 1))
     corners = ndimage.binary_dilation(voxel_p.numpy(), structure)

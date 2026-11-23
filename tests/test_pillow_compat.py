@@ -30,10 +30,10 @@ def repo_function(relative, name):
 
 
 def image_eval(expression, **environment):
-    # 10.4 keeps the deprecated eval alias; both versions use the same interface.
+    # Test-only fixed trusted expressions; never accept external expression strings.
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", DeprecationWarning)
-        return ImageMath.eval(expression, environment)
+        return ImageMath.unsafe_eval(expression, **environment)
 
 
 class ArrayTensor:

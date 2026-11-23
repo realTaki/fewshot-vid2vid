@@ -59,7 +59,20 @@
 |  6  |   900   |     60     | 560x700   |   236.94   |        2883      |
 
 
+## Python 3.11 migration candidate (draft; not ready for deployment)
+
+The isolated migration branch updates the Docker recipe and dependency pins to
+Python 3.11.17, CUDA 11.8 and torch/vision/audio 2.7.1/0.22.1/2.7.1.
+Only bounded CPU tests and two native host-wrapper syntax checks have run.
+The six CUDA builds, full install, real checkpoints, training/inference and the
+host driver remain **unvalidated**. Do not apply the historical hardware numbers
+below as evidence for this new runtime. See [migration evidence and gates](docs/python311-migration.md).
+
 ## 安裝方法 (使用 Docker)
+
+> The following CUDA 11.1 instructions and measured hardware describe the
+> historical runtime, not validation of the migration candidate. For the new
+> candidate, use the version-matched Dockerfile only after its documented gates.
 0. 在 host 上安裝 Docker and [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) 以使用 GPU-enabled docker.
 1. 如果欲使用 CUDA 和 GPU，確認 host 的 CUDA driver 是否支援 CUDA 11.1，如果不支援，可以使用較低版本的 CUDA [image](https://hub.docker.com/r/nvidia/cuda/tags)，另外修改[安裝的 torch 版本](https://github.com/achen353/imaginaire-fsvid2vid/blob/85a50b93da9adbf8f1f81d7ab8f284422e3118d7/scripts/install.sh#L34)，Few-shot vid2vid 含有需要自行編譯的 module，需要 torch 編譯的 CUDA 版本和容器 CUDA 版本一致。
 2. Build the image with `docker build -t fs-vid2vid .`

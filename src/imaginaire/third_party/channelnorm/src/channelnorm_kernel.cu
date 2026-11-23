@@ -108,15 +108,15 @@ void channelnorm_kernel_forward(
 
     int n = output.numel();
 
-    AT_DISPATCH_FLOATING_TYPES_AND_HALF(input1.type(), "channelnorm_forward", ([&] {
+    AT_DISPATCH_FLOATING_TYPES_AND_HALF(input1.scalar_type(), "channelnorm_forward", ([&] {
 
       kernel_channelnorm_update_output<scalar_t><<< (n + CUDA_NUM_THREADS - 1)/CUDA_NUM_THREADS, CUDA_NUM_THREADS, 0, at::cuda::getCurrentCUDAStream() >>>(
 //at::globalContext().getCurrentCUDAStream() >>>(
           n,
-          input1.data<scalar_t>(), 
+          input1.data_ptr<scalar_t>(),
           input1_size,
           input1_stride, 
-          output.data<scalar_t>(),
+          output.data_ptr<scalar_t>(),
           output_size,
           output_stride, 
           norm_deg);
@@ -149,21 +149,21 @@ void channelnorm_kernel_backward(
 
     int n = gradInput1.numel();
 
-    AT_DISPATCH_FLOATING_TYPES_AND_HALF(input1.type(), "channelnorm_backward_input1", ([&] {
+    AT_DISPATCH_FLOATING_TYPES_AND_HALF(input1.scalar_type(), "channelnorm_backward_input1", ([&] {
 
       kernel_channelnorm_backward_input1<scalar_t><<< (n + CUDA_NUM_THREADS - 1)/CUDA_NUM_THREADS, CUDA_NUM_THREADS, 0, at::cuda::getCurrentCUDAStream() >>>(
 //at::globalContext().getCurrentCUDAStream() >>>(
           n, 
-          input1.data<scalar_t>(),
+          input1.data_ptr<scalar_t>(),
           input1_size,
           input1_stride,
-          output.data<scalar_t>(),
+          output.data_ptr<scalar_t>(),
           output_size,
           output_stride,
-          gradOutput.data<scalar_t>(),
+          gradOutput.data_ptr<scalar_t>(),
           gradOutput_size,
           gradOutput_stride, 
-          gradInput1.data<scalar_t>(),
+          gradInput1.data_ptr<scalar_t>(),
           gradInput1_size,
           gradInput1_stride,
           norm_deg
